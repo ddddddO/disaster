@@ -1,11 +1,11 @@
 package main
 
 import (
-	"bufio"
-	"errors"
+	"flag"
 	"fmt"
 	"log"
-	"net/http"
+
+	"github.com/ddddddO/disaster/lib"
 )
 
 /*
@@ -14,23 +14,30 @@ import (
 	http://www.asahi-net.or.jp/~ax2s-kmtn/ref/iso3166-1.html
 */
 
+var apiKey string
+
 const endpoint = "http://api.openweathermap.org/data/2.5/forecast"
 
 func main() {
+	flag.StringVar(&apiKey, "key", "", "OpenWeatherMap API Key")
+	flag.Parse()
+
 	target := endpoint + "?q=%s,%s&APPID=%s"
+	url := fmt.Sprintf(target, "London", "uk", apiKey)
 
-	resp, err := http.Get(fmt.Sprintf(target, "London", "uk", "appid"))
+	c := lib.NewClient(url)
+	resp, err := c.Get()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("stack trace: %+v\n", err)
 	}
 
-	if resp.StatusCode != http.StatusOK {
-		log.Fatal(errors.New("failed to request"))
+	w := Weather{}
+	err = lib.Unmarshal(resp.Body, &w)
+	if err != nil {
+		log.Fatalf("stack trace: %+v\n", err)
 	}
 
-	sc := bufio.NewScanner(resp.Body)
-	for sc.Scan() {
-		fmt.Println(sc.Text())
-	}
-
+	fmt.Println(w.City)
+	fmt.Println(w.Message)
+	fmt.Println(w.List[0])
 }
