@@ -32,8 +32,7 @@ func main() {
 	}
 
 	w := Weather{}
-	err = lib.Unmarshal(resp.Body, &w)
-	if err != nil {
+	if err = lib.Unmarshal(resp.Body, &w); err != nil {
 		log.Fatalf("stack trace: %+v\n", err)
 	}
 
