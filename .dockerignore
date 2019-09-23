@@ -1,0 +1,4 @@
+*.txt
+.git
+node_modules
+vendor
