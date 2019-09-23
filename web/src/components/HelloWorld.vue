@@ -79,6 +79,14 @@
           awesome-vue
         </a>
       </li>
+      <li>
+        <a
+          href="http://localhost:8080/weather"
+          target="_blank"
+        >
+          !WEATHER!
+        </a>
+      </li>
     </ul>
   </div>
 </template>
